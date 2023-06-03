@@ -56,7 +56,7 @@ const Login = () => {
     return <Center minH={'100vh'}>
         {loading && <BackdropLoader text={loading} />}
         <VStack spacing={8} mx={'auto'} maxW={'xl'} py={12} px={6}>
-            <Heading color="gray.400">Sign in to your Portal</Heading>
+            <Heading color="gray.600">Sign in to your Portal</Heading>
             <Card
                 minW={{
                     base: '90vw',
