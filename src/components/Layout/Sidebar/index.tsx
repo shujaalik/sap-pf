@@ -5,7 +5,6 @@ import {
     CloseButton,
     Flex,
     Icon,
-    Link,
     Drawer,
     DrawerContent,
     Text,
@@ -15,25 +14,23 @@ import {
 } from '@chakra-ui/react';
 import {
     FiHome,
-    FiTrendingUp,
-    FiCompass,
-    FiStar,
-    FiSettings,
     FiMenu,
 } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import { BsCalendar, BsFileEarmarkCheck, BsBook } from "react-icons/bs";
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
 
 interface LinkItemProps {
     name: string;
     icon: IconType;
+    path: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-    { name: 'Home', icon: FiHome },
-    { name: 'Trending', icon: FiTrendingUp },
-    { name: 'Explore', icon: FiCompass },
-    { name: 'Favourites', icon: FiStar },
-    { name: 'Settings', icon: FiSettings },
+    { name: 'Home', icon: FiHome, path: "/" },
+    { name: 'Attendance', icon: BsCalendar, path: "/attendance" },
+    { name: 'Results', icon: BsFileEarmarkCheck, path: "/results" },
+    { name: 'Courses', icon: BsBook, path: "/courses" }
 ];
 
 export default function Sidebar({ children }: { children: ReactNode }) {
@@ -79,12 +76,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             {...rest}>
             <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
                 <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-                    Logo
+                    SAP PF
                 </Text>
                 <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
             </Flex>
             {LinkItems.map((link) => (
-                <NavItem key={link.name} icon={link.icon}>
+                <NavItem key={link.name} icon={link.icon} to={link.path}>
                     {link.name}
                 </NavItem>
             ))}
@@ -95,10 +92,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 interface NavItemProps extends FlexProps {
     icon: IconType;
     children: ReactText;
+    to: string;
 }
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, to, ...rest }: NavItemProps) => {
     return (
-        <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+        <Link to={to} style={{ textDecoration: 'none' }}>
             <Flex
                 align="center"
                 p="4"
@@ -150,7 +148,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             />
 
             <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-                Logo
+                SAP PF
             </Text>
         </Flex>
     );

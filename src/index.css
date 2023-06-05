@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+.fc-theme-bootstrap5 td:hover {
+  cursor: pointer;
+}
+.fc .fc-daygrid-day {
+  transition: all 0.1s ease-in-out;
+}
+.fc .fc-daygrid-day:hover {
+  background-color: #cccccc6b;
+}
+.fc-toolbar-title {
+  font-weight: 500!important;
+  font-size: large!important;
+}
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #cbd5e0 #cbd5e0;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+*:hover::-webkit-scrollbar-thumb {
+  background-color: #cbd5e0;
+  border-radius: 4px;
+}

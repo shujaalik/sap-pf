@@ -1,4 +1,4 @@
-import { auth, db } from "../index";
+import { db } from "../index";
 import {
   ref as FBRef,
   child,
@@ -10,25 +10,6 @@ import {
 } from "firebase/database";
 
 const get = (path: string): Promise<DataSnapshot | any> => {
-  return new Promise((resolve, reject) => {
-    const { uid } = auth.currentUser || {};
-    if (!uid) reject("No user logged in");
-    path = `/users/${uid}/` + path;
-    const dbRef: DatabaseReference = FBRef(db);
-    const ref: DatabaseReference = child(dbRef, path);
-    FBGet(ref)
-      .then((snapshot) => {
-        // send recieved snapshot to resolve
-        resolve(snapshot);
-      })
-      .catch((error) => {
-        // raise exception
-        reject(error);
-      });
-  });
-};
-
-const rawGet = (path: string): Promise<DataSnapshot | any> => {
   return new Promise((resolve, reject) => {
     const dbRef: DatabaseReference = FBRef(db);
     const ref: DatabaseReference = child(dbRef, path);
@@ -54,13 +35,10 @@ const set = (path: string, data: any): Promise<void> => {
 
 const update = (path: string, data: any): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const { uid } = auth.currentUser || {};
-    if (!uid) reject("No user logged in");
-    path = `/users/${uid}/` + path;
     const dbRef: DatabaseReference = FBRef(db);
     const ref: DatabaseReference = child(dbRef, path);
     FBUpdate(ref, data).then(resolve).catch(reject);
   });
 };
 
-export { get, rawGet, set, update };
+export { get, set, update };
