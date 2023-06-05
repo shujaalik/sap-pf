@@ -62,25 +62,28 @@ type Event = {
     };
 }
 const SideTimeTable = () => {
-    const [events, setEvents] = useState<Event[]>([{
-        title: "Personal Development",
-        date: "2023-06-06",
-        time: {
-            start: "11:45",
-            end: "14:45"
-        }
-    }, {
-        title: "Linear Algebra",
-        date: "2023-06-06",
-        time: {
-            start: "15:00",
-            end: "18:00"
-        }
-    }]);
+    const [events, setEvents] = useState<Event[]>([]);
     const [selectedDate, setSelectedDate] = useState<null | {
         date: string;
         events: Event[];
     }>(null);
+
+    useEffect(() => {
+        const func = async () => {
+            const { uid } = auth.currentUser || {};
+            if (!uid) return;
+            const snap = await get(`users/${uid}/timetable`);
+            const _events = Object.values(snap.val() || {}) as Event[];
+            setEvents(_events);
+            const today = new Date().toISOString().split("T")[0];
+            setTimeout(() => {
+                handleDateClick({ dateStr: today });
+            }, 100);
+        }
+        func();
+        // eslint-disable-next-line
+    }, []);
+
     const handleDateClick = (e: any) => {
         let { dateStr, event } = e;
         if (!dateStr) dateStr = event.startStr;
