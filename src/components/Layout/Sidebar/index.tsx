@@ -93,6 +93,21 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             <NavItem icon={FiLogOut} onClick={logout}>
                 Logout
             </NavItem>
+            <Box
+                position={"absolute"}
+                bottom="0"
+                p="4"
+                mx="4">
+                <Text
+                    color="gray.500"
+                    fontSize="xs">
+                        Group Members:
+                        <br />
+                        <strong>M Shuja Ali (36601)</strong>
+                        <br />
+                        <strong>Moazzam Ali (36601)</strong>
+                </Text>
+            </Box>
         </Box>
     );
 };
