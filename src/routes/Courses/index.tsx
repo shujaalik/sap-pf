@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { get } from "../../components/firebase/api/db";
 import { auth } from "../../components/firebase";
 import { Box, Button, Card, FormControl, FormLabel, HStack, Heading, IconButton, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack, useDisclosure, useToast } from "@chakra-ui/react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { Select } from "chakra-react-select";
 import { set } from "../../components/firebase/api/db";
 import BackdropLoader from "../../components/Loaders/BackdropLoader";
@@ -84,6 +84,24 @@ const StudentCourses = () => {
         fetch();
     }
 
+    const dropCourse = async (id: string) => {
+        const { uid } = auth.currentUser || {};
+        if (!uid) return;
+        const course = courses?.find(course => course.id === id);
+        if (!course) return;
+        await set(`users/${uid}/courses/${course.id}`, null);
+        toast({
+            title: "Success",
+            description: "Course dropped successfully.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+        });
+        fetch();
+    }
+
+
+
     return <Card
         p={5}
         borderRadius="xl"
@@ -110,10 +128,13 @@ const StudentCourses = () => {
                         <Td>{course.start} - {course.end}</Td>
                         <Td>{course.creditHours}</Td>
                         <Td isNumeric><IconButton
-                            isDisabled={course.picked}
-                            onClick={() => { addCourse(course.id) }}
+                            variant={"ghost"}
+                            colorScheme={
+                                course.picked ? "red" : "green"
+                            }
+                            onClick={() => { course.picked ? dropCourse(course.id) : addCourse(course.id) }}
                             aria-label="Add course"
-                            icon={<AiOutlinePlus />}
+                            icon={course.picked ? <AiOutlineMinus /> : <AiOutlinePlus />}
                         /></Td>
                     </Tr>) : <></>}
                 </Tbody>
