@@ -60,7 +60,7 @@ const CoursesPicked = () => {
     }, []);
 
     return <Card
-        minHeight={"400px"}
+        minHeight={"500px"}
         w="100%"
         p={5}
         borderRadius="xl"
