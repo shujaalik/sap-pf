@@ -106,6 +106,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
                         <strong>M Shuja Ali (36601)</strong>
                         <br />
                         <strong>Moazzam Ali (25122)</strong>
+                        <br />
+                        <strong>Aaraf (24668)</strong>
                 </Text>
             </Box>
         </Box>
