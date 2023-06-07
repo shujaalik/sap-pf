@@ -9,7 +9,6 @@ import {
     InputGroup,
     InputRightElement,
     Button,
-    Text,
     useToast,
     Flex,
     Checkbox,
@@ -91,7 +90,6 @@ const Login = () => {
                             <FormControl>
                                 <Checkbox name='remember_me' defaultChecked>Remember me</Checkbox>
                             </FormControl>
-                            <Text w="100%" textAlign={"right"} color="blue.500" cursor="pointer">Forgot Password?</Text>
                         </Flex>
                         <Button mr="auto" colorScheme="blue" rightIcon={<FiLogIn />} type="submit">Sign in</Button>
                     </VStack>

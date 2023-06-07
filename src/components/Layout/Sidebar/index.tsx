@@ -14,12 +14,15 @@ import {
 } from '@chakra-ui/react';
 import {
     FiHome,
+    FiLogOut,
     FiMenu,
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { BsCalendar, BsFileEarmarkCheck, BsBook } from "react-icons/bs";
+import { BsCalendar, BsBook } from "react-icons/bs";
 import { IconType } from 'react-icons';
 import { ReactText } from 'react';
+import { logout } from '../../firebase/api/auth';
+import { auth } from '../../firebase';
 
 interface LinkItemProps {
     name: string;
@@ -29,12 +32,14 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [
     { name: 'Home', icon: FiHome, path: "/" },
     { name: 'Attendance', icon: BsCalendar, path: "/attendance" },
-    { name: 'Results', icon: BsFileEarmarkCheck, path: "/results" },
     { name: 'Courses', icon: BsBook, path: "/courses" }
 ];
 
 export default function Sidebar({ children }: { children: ReactNode }) {
+    const isLoggedin = !!auth.currentUser;
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    if (!isLoggedin) return <>{children}</>;
     return (
         <Box minH="100vh" bg={"gray.100"}>
             <SidebarContent
@@ -85,6 +90,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
                     {link.name}
                 </NavItem>
             ))}
+            <NavItem icon={FiLogOut} onClick={logout}>
+                Logout
+            </NavItem>
         </Box>
     );
 };
@@ -92,10 +100,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 interface NavItemProps extends FlexProps {
     icon: IconType;
     children: ReactText;
-    to: string;
+    to?: string;
+    onClick?: () => void;
 }
-const NavItem = ({ icon, children, to, ...rest }: NavItemProps) => {
-    return (
+const NavItem = ({ icon, onClick, children, to, ...rest }: NavItemProps) => {
+    return to ?
         <Link to={to} style={{ textDecoration: 'none' }}>
             <Flex
                 align="center"
@@ -122,7 +131,32 @@ const NavItem = ({ icon, children, to, ...rest }: NavItemProps) => {
                 {children}
             </Flex>
         </Link>
-    );
+        : <Box onClick={onClick}>
+            <Flex
+                align="center"
+                p="4"
+                mx="4"
+                borderRadius="lg"
+                role="group"
+                cursor="pointer"
+                _hover={{
+                    bg: 'cyan.400',
+                    color: 'white',
+                }}
+                {...rest}>
+                {icon && (
+                    <Icon
+                        mr="4"
+                        fontSize="16"
+                        _groupHover={{
+                            color: 'white',
+                        }}
+                        as={icon}
+                    />
+                )}
+                {children}
+            </Flex>
+        </Box>
 };
 
 interface MobileProps extends FlexProps {

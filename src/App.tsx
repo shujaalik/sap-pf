@@ -10,6 +10,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './components/firebase';
 import FullScreen from './components/Loaders';
 import Home from './routes/Home';
+import Courses from './routes/Courses';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -26,6 +27,7 @@ const App = () => {
         : isAuthenticated ?
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/courses" element={<Courses />} />
           </Routes>
           : <Login />
       }

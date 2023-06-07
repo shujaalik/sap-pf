@@ -61,6 +61,15 @@ type Event = {
         end: string;
     };
 }
+interface Course {
+    id: string;
+    name: string;
+    days: string[];
+    start: string;
+    end: string;
+    creditHours: number;
+    instructor: string;
+}
 const SideTimeTable = () => {
     const [events, setEvents] = useState<Event[]>([]);
     const [selectedDate, setSelectedDate] = useState<null | {
@@ -72,10 +81,55 @@ const SideTimeTable = () => {
         const func = async () => {
             const { uid } = auth.currentUser || {};
             if (!uid) return;
-            const snap = await get(`users/${uid}/timetable`);
-            const _events = Object.values(snap.val() || {}) as Event[];
+            const snaps = [
+                get(`users/${uid}/courses`),
+                get(`courses`),
+                get(`users/${uid}/type`),
+                get(`users/${uid}/details/name`)
+            ];
+            const [snap, snap2, snap3, snap4] = await Promise.all(snaps);
+            const type: "teacher" | "student" = snap3.val();
+            const courses: Course[] = [];
+            if (type === "student") {
+                const allCourses: Course[] = Object.values(snap2.val() || {});
+                const userCourses = Object.keys(snap.val() || {});
+                for (const course of allCourses) {
+                    if (userCourses.includes(course.id)) {
+                        courses.push(course);
+                    }
+                }
+            } else {
+                const allCourses: Course[] = Object.values(snap2.val() || {});
+                const name = snap4.val();
+                for (const course of allCourses) {
+                    if (course.instructor === name) {
+                        courses.push(course);
+                    }
+                }
+            }
+            const _events: Event[] = [];
+            for (const course of courses) {
+                for (const day of course.days) {
+                    const date = new Date();
+                    while (date.getMonth() === new Date().getMonth()) {
+                        if (date.getDay() === ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"].indexOf(day)) {
+                            const _date = date.toISOString().slice(0, 10);
+                            const _time = {
+                                start: course.start,
+                                end: course.end
+                            };
+                            _events.push({
+                                title: course.name,
+                                date: _date,
+                                time: _time
+                            });
+                        }
+                        date.setDate(date.getDate() + 1);
+                    }
+                }
+            }
             setEvents(_events);
-            const today = new Date().toISOString().split("T")[0];
+            const today = new Date().toISOString().slice(0, 10);
             setTimeout(() => {
                 handleDateClick({ dateStr: today });
             }, 100);

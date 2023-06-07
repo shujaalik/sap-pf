@@ -6,7 +6,7 @@ import quoteBG from "../../assets/images/quote-bg.svg";
 import Students from "../../assets/images/students.svg";
 import SideTimeTable from "./SideTimeTable";
 import { get } from "../../components/firebase/api/db";
-import Scoring from "./Scoring";
+import CoursesPicked from "./CoursesPicked";
 
 const Home = () => {
   const [greeting, setGreeting] = useState("");
@@ -16,7 +16,9 @@ const Home = () => {
     const func = async () => {
       const { uid } = auth.currentUser || {};
       if (!uid) return;
-      const snap = await get(`users/${uid}/details/name`);
+      const snaps = [get(`users/${uid}/details/name`), get(`users/${uid}/type`)];
+      const [snap, snap2] = await Promise.all(snaps);
+      const type = snap2.val();
       const displayName = snap.val();
       const hour = new Date().getHours();
       let text = "";
@@ -24,7 +26,7 @@ const Home = () => {
       if (hour >= 12 && hour < 17) text = "Good Afternoon";
       if (hour >= 17 && hour < 20) text = "Good Evening";
       if (hour >= 20 && hour < 24) text = "Good Night";
-      text += `, ${displayName || "Student"}👋`;
+      text += `, ${displayName || type}👋`;
       setGreeting(text);
     }
     func();
@@ -32,6 +34,7 @@ const Home = () => {
 
   return <Box p={8}>
     <Heading
+      textTransform={"capitalize"}
       letterSpacing={"wide"}
       color="gray.700"
       fontSize="2xl">{greeting}</Heading>
@@ -42,6 +45,11 @@ const Home = () => {
       <GridItem colSpan={2}>
         <VStack spacing={5}>
           <Flex
+            w="100%"
+            flexDir={{
+              base: "column",
+              md: "row"
+            }}
             justifyContent="space-between"
             alignItems={"center"}
             minH={"150px"}
@@ -53,7 +61,7 @@ const Home = () => {
             <Quote m={10} fontWeight={500} size="md" color={"whiteAlpha.900"} />
             <Image h="150px" p={2} src={Students} />
           </Flex>
-          <Scoring />
+          <CoursesPicked />
         </VStack>
       </GridItem>
       <GridItem>
